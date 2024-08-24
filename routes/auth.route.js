@@ -7,4 +7,6 @@ const routes = express.Router();
 routes.post('/signup', signupValidator,  AuthController.signup);
 routes.post('/login', AuthController.login);
 
+
+
 module.exports = routes;

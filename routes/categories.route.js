@@ -8,12 +8,15 @@ const {
   createCategoryValidator,
   updateCategoryValidator,
 } = require("../utils/validators/category.validator");
+const {permessions} = require('../middlewares/permessions.middleware')
+
+
 
 // create router from express router
 const routes = express.Router();
 
 // define routes for categories
-routes.get("/", CategotiesController.getCategories);
+routes.get("/",permessions, CategotiesController.getCategories);
 routes.get("/:id", CategotiesController.getCategoriesById);
 routes.post(
   "/",

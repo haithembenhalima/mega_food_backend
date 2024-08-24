@@ -16,7 +16,7 @@ const {permessions} = require('../middlewares/permessions.middleware')
 const routes = express.Router();
 
 // define routes for categories
-routes.get("/",permessions, CategotiesController.getCategories);
+routes.get("/",permessions("user"), CategotiesController.getCategories);
 routes.get("/:id", CategotiesController.getCategoriesById);
 routes.post(
   "/",

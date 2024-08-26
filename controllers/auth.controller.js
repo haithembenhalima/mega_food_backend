@@ -1,11 +1,14 @@
 const asyncHandler = require("express-async-handler");
 const jwt = require("jsonwebtoken");
 const bcrypt = require("bcrypt");
+const crypto = require('crypto');
 const Models = require("../models/index.model");
 const ApiError = require("../utils/ApiError");
 const ApiSuccess = require("../utils/ApiSuccess");
 const { where } = require("sequelize");
-const {generateToken} = require('../utils/generateToken')
+const { generateToken } = require("../utils/generateToken");
+const sendEmail = require("../utils/sendEmail");
+const {forgotPasswordMessage} = require('../utils/emailMessages')
 
 /*
     @desc Signup into the system
@@ -23,13 +26,17 @@ exports.signup = asyncHandler(async (req, res, next) => {
   }
 
   // 2) - generate JWT token
-  const token = generateToken(userData.email)
+  const token = generateToken(userData.email);
 
   // 3) - create a new user
   const newUser = await Models.User.create(userData);
   const userWithToken = { data: userData, token: token };
 
-   res.status(201).json(new ApiSuccess("success", "User created with success", userWithToken));
+  res
+    .status(201)
+    .json(
+      new ApiSuccess("success", "User created with success", userWithToken)
+    );
 });
 
 /*
@@ -38,19 +45,51 @@ exports.signup = asyncHandler(async (req, res, next) => {
     @access Public
 */
 exports.login = asyncHandler(async (req, res, next) => {
-
   // 1) - check if the user signed in and the password is correct
   const userData = req.body;
   const user = await Models.User.findOne({ where: { email: userData.email } });
-  if(!user || !(await bcrypt.compare(userData.password,user.password))) {
+  if (!user || !(await bcrypt.compare(userData.password, user.password))) {
     return next(new ApiError("Email or password not found", 404));
   }
 
   // 2) - generate token
-  const token = generateToken(userData.email)
+  const token = generateToken(userData.email);
   // 3) - send the response
-  const userWithToken = {name: user.name,email: user.email , token: token}
-  res.status(200).json(new ApiSuccess("success", "Login with success", userWithToken))
-
+  const userWithToken = { name: user.name, email: user.email, token: token };
+  res
+    .status(200)
+    .json(new ApiSuccess("success", "Login with success", userWithToken));
 });
 
+/*
+    @desc Forgot password
+    @route POST /api/v1/auth/forgotPassword
+    @access private/user
+*/
+exports.forgotPassword = asyncHandler(async (req, res, next) => {
+  const userData = req.body;
+  // 1) - verify if the email is already existing
+  const user = await Models.User.findOne({ where: { email: userData.email } });
+  if (!user) {
+    return next(new ApiError("Email not found", 404));
+  }
+
+  // 2) - Generate a forgot reset code (6 digits) and save it in the user's record
+  const resetCode = Math.floor(100000 + Math.random() * 900000).toString();
+  const hashedResetCode = crypto
+    .createHash('sha256')
+    .update(resetCode)
+    .digest('hex');
+  // 3) - Send the forgit reset code to gmail account
+  const message = forgotPasswordMessage(resetCode, user.name);
+  try {
+    sendEmail({
+      email: userData.email,
+      subject: "إعادة تعيين كلمة سر جديدة",
+      message: message,
+    });
+  } catch (error) {
+    return next(new ApiError("Email message sending failed", 400))
+  }  
+
+});

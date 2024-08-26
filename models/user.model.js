@@ -39,6 +39,22 @@ const User = sequelize.define(
     adress:{
         type: DataTypes.STRING,
         allowNull: true,
+    },
+    passwordChangedAt:{
+      type: DataTypes.DATE,
+      defaultValue: null,
+    },
+    passwordResetCode:{
+      type: DataTypes.STRING,
+      defaultValue: null,
+    },
+    passwordResetExpiresAt:{
+      type: DataTypes.DATE,
+      defaultValue: null,
+    },
+    passwordResetVerified:{
+      type: DataTypes.BOOLEAN,
+      defaultValue: false,
     }
 
   },

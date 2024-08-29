@@ -10,7 +10,16 @@ exports.getProductValidator = [
   ];
 
 exports.createProductValidator = [
-    check("name").notEmpty().withMessage("Product name is empty"),
+    check('name')
+    .notEmpty().withMessage('Category name is empty')
+    .custom(async (name) => {
+      // Check if the name already exists in the database
+      const categoryExists = await Models.Categories.findOne({ where: { name } });
+      if (categoryExists) {
+        throw new Error('Category name already exists');
+      }
+      return true; // Proceed if no errors
+    }),
     check("images").notEmpty().isObject().withMessage("Product images is required"),
     check("price").notEmpty().isNumeric().withMessage("Product price must be a number and not empty"),
     check("description").notEmpty().withMessage("Product description is empty"),
@@ -24,7 +33,16 @@ exports.createProductValidator = [
 ];
 
 exports.updateProductValidator = [
-    check("name").optional().notEmpty().withMessage("Product name is empty"),
+    check('name')
+    .notEmpty().withMessage('Category name is empty')
+    .custom(async (name) => {
+      // Check if the name already exists in the database
+      const categoryExists = await Models.Categories.findOne({ where: { name } });
+      if (categoryExists) {
+        throw new Error('Category name already exists');
+      }
+      return true; // Proceed if no errors
+    }),
     check("price").optional().notEmpty().isNumeric().withMessage("Product price must be a number and not empty"),
     check("description").optional().notEmpty().withMessage("Product description is empty"),
     check("CategoryId").optional().notEmpty().isNumeric().withMessage("Category ID is empty"),

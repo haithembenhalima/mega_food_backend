@@ -35,11 +35,7 @@ exports.ReadOne = (model) =>
 exports.createOne = (model) =>
   asyncHandler(async (req, res, next) => {
     const data = req.body;
-    // verify that object does not already exist
-    const objectExists = await model.findOne({ where: { name: data.name } });
-    if (objectExists) {
-      return next(new ApiError("Object already exists", 409));
-    }
+    
     // create a new object
     const newObject = await model.create(data);
     res
@@ -80,4 +76,18 @@ exports.deteleOne = (model) =>
     res
       .status(200)
       .json(new ApiSuccess("success", "Object deleted with success"));
+  });
+
+// @ find by primary key
+
+exports.findByPrimaryKey = (model) =>
+  asyncHandler(async (req, res, next) => {
+    const id = req.params.id;
+    const object = await model.findByPk({ where: { id } });
+    if (!object) {
+      return next(new ApiError("Object Not Found", 400));
+    }
+    res
+      .status(200)
+      .json(new ApiSuccess("success", "Object finded with success", object));
   });

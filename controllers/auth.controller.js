@@ -77,9 +77,10 @@ exports.forgotPassword = asyncHandler(async (req, res, next) => {
 
   // 2) - Generate a forgot reset code (6 digits) and save it in the user's record
   const resetCode = Math.floor(100000 + Math.random() * 900000).toString();
-  const hashedResetCode = await bcrypt.hash(user.password, 8);
   // 3) - Send the forgit reset code to gmail account
   const message = forgotPasswordMessage(resetCode, user.name);
+  console.log(resetCode);
+  
   /* try {
     sendEmail({
       email: userData.email,
@@ -95,6 +96,12 @@ exports.forgotPassword = asyncHandler(async (req, res, next) => {
   const thirtyMinutesInSeconds = 30 * 60;
   const expirationDate = nowInSeconds + thirtyMinutesInSeconds;  
 
+
+  const hashedResetCode = crypto
+    .createHash('sha256')
+    .update(resetCode)
+    .digest('hex');  
+
   const SaveResetCode = await Models.User.update(
     {
       passwordResetCode: hashedResetCode,
@@ -106,4 +113,32 @@ exports.forgotPassword = asyncHandler(async (req, res, next) => {
   );
 
   res.status(200).json(new ApiSuccess(200, "Reset password code sended successfully"))
+});
+
+exports.verifyResetCode = asyncHandler(async (req, res, next) =>{
+
+  // 1) - get the reset code
+  const resetCode = req.body.resetCode;
+  
+  // 2) - check if there is a user with the reset code
+
+  const hashedResetCode = crypto
+    .createHash('sha256')
+    .update(resetCode)
+    .digest('hex');  
+  const user = await Models.User.findOne({
+    where: { passwordResetCode: hashedResetCode },
+  });
+
+  if (!user) {
+    return next(new ApiError("Invalid reset code", 404));
+  }  
+
+  // 3) - check if the reset code is expired
+  const nowInSeconds = Math.floor(Date.now() / 1000);
+  if (nowInSeconds > user.passwordResetExpiresAt) {
+    return next(new ApiError("Reset code expired, please try again", 401));
+  }
+
+  res.status(200).json(new ApiSuccess(200, "Reset code verified successfully"));
 });

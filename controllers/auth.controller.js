@@ -1,14 +1,15 @@
 const asyncHandler = require("express-async-handler");
 const jwt = require("jsonwebtoken");
 const bcrypt = require("bcrypt");
-const crypto = require('crypto');
+const crypto = require("crypto");
 const Models = require("../models/index.model");
 const ApiError = require("../utils/ApiError");
 const ApiSuccess = require("../utils/ApiSuccess");
 const { where } = require("sequelize");
 const { generateToken } = require("../utils/generateToken");
 const sendEmail = require("../utils/sendEmail");
-const {forgotPasswordMessage} = require('../utils/emailMessages')
+const { forgotPasswordMessage } = require("../utils/emailMessages");
+const { log } = require("console");
 
 /*
     @desc Signup into the system
@@ -76,13 +77,10 @@ exports.forgotPassword = asyncHandler(async (req, res, next) => {
 
   // 2) - Generate a forgot reset code (6 digits) and save it in the user's record
   const resetCode = Math.floor(100000 + Math.random() * 900000).toString();
-  const hashedResetCode = crypto
-    .createHash('sha256')
-    .update(resetCode)
-    .digest('hex');
+  const hashedResetCode = await bcrypt.hash(user.password, 8);
   // 3) - Send the forgit reset code to gmail account
   const message = forgotPasswordMessage(resetCode, user.name);
-  try {
+  /* try {
     sendEmail({
       email: userData.email,
       subject: "إعادة تعيين كلمة سر جديدة",
@@ -90,6 +88,22 @@ exports.forgotPassword = asyncHandler(async (req, res, next) => {
     });
   } catch (error) {
     return next(new ApiError("Email message sending failed", 400))
-  }  
+  }  */
 
+  // 4) - Save the reset code + expiration time in the user's record
+  const nowInSeconds = Math.floor(Date.now() / 1000);
+  const thirtyMinutesInSeconds = 30 * 60;
+  const expirationDate = nowInSeconds + thirtyMinutesInSeconds;  
+
+  const SaveResetCode = await Models.User.update(
+    {
+      passwordResetCode: hashedResetCode,
+      passwordResetExpiresAt: expirationDate,
+    },
+    {
+      where: { email: userData.email },
+    }
+  );
+
+  res.status(200).json(new ApiSuccess(200, "Reset password code sended successfully"))
 });

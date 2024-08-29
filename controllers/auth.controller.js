@@ -80,7 +80,7 @@ exports.forgotPassword = asyncHandler(async (req, res, next) => {
   // 3) - Send the forgit reset code to gmail account
   const message = forgotPasswordMessage(resetCode, user.name);
   console.log(resetCode);
-  
+
   /* try {
     sendEmail({
       email: userData.email,
@@ -94,13 +94,12 @@ exports.forgotPassword = asyncHandler(async (req, res, next) => {
   // 4) - Save the reset code + expiration time in the user's record
   const nowInSeconds = Math.floor(Date.now() / 1000);
   const thirtyMinutesInSeconds = 30 * 60;
-  const expirationDate = nowInSeconds + thirtyMinutesInSeconds;  
-
+  const expirationDate = nowInSeconds + thirtyMinutesInSeconds;
 
   const hashedResetCode = crypto
-    .createHash('sha256')
+    .createHash("sha256")
     .update(resetCode)
-    .digest('hex');  
+    .digest("hex");
 
   const SaveResetCode = await Models.User.update(
     {
@@ -112,27 +111,28 @@ exports.forgotPassword = asyncHandler(async (req, res, next) => {
     }
   );
 
-  res.status(200).json(new ApiSuccess(200, "Reset password code sended successfully"))
+  res
+    .status(200)
+    .json(new ApiSuccess(200, "Reset password code sended successfully"));
 });
 
-exports.verifyResetCode = asyncHandler(async (req, res, next) =>{
-
+exports.verifyResetCode = asyncHandler(async (req, res, next) => {
   // 1) - get the reset code
   const resetCode = req.body.resetCode;
-  
+
   // 2) - check if there is a user with the reset code
 
   const hashedResetCode = crypto
-    .createHash('sha256')
+    .createHash("sha256")
     .update(resetCode)
-    .digest('hex');  
+    .digest("hex");
   const user = await Models.User.findOne({
     where: { passwordResetCode: hashedResetCode },
   });
 
   if (!user) {
     return next(new ApiError("Invalid reset code", 404));
-  }  
+  }
 
   // 3) - check if the reset code is expired
   const nowInSeconds = Math.floor(Date.now() / 1000);
@@ -141,4 +141,27 @@ exports.verifyResetCode = asyncHandler(async (req, res, next) =>{
   }
 
   res.status(200).json(new ApiSuccess(200, "Reset code verified successfully"));
+});
+
+exports.resetPassword = asyncHandler(async (req, res, next) => {
+  // 1) - get user based on gmail
+  const email = req.body.email;
+  const password = req.body.password;
+
+  const user = await Models.User.findOne({ where: { email: email } });
+  if (!user) {
+    return next(new ApiError("Please enter your correct gmail", 404));
+  }
+
+  // 2) - update password
+  changedPasswordDate = Date.now();
+  const updatePassword = await Models.User.update(
+    { password: password, passwordChangedAt: changedPasswordDate },
+    { where: { email: email }, individualHooks: true }
+  );
+
+  if (updatePassword)
+    return res
+      .status(200)
+      .json(new ApiSuccess(200, "Password updated with success"));
 });

@@ -52,10 +52,6 @@ const User = sequelize.define(
       type: DataTypes.DATE,
       defaultValue: null,
     },
-    passwordResetVerified:{
-      type: DataTypes.BOOLEAN,
-      defaultValue: false,
-    }
 
   },
   

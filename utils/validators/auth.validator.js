@@ -12,3 +12,11 @@ exports.signupValidator = [
     validatorMiddleware
 ];
 
+exports.verifyResetCodeValidator = [
+    check('resetCode')
+    .isNumeric() 
+    .withMessage('Reset code must be a number')
+    .isLength({ min: 6, max: 6 }) 
+    .withMessage('Reset code must be exactly 6 digits long')
+];
+

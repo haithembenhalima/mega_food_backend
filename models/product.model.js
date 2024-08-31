@@ -53,6 +53,16 @@ const Product = sequelize.define(
       defaultValue: 0,
     },
   },
+  {
+    hooks: {
+      beforeSave: async (product, options) => {
+        // Check if password is provided and has changed
+        if (product.changed('commandNumber')) {
+          product.ratingAverage = product.commandNumber > 0 ? ((product.commandNumber * 5) / 100 ): 0;
+        } 
+      },
+    },
+  }
 );
 
 module.exports = Product;

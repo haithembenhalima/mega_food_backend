@@ -20,8 +20,8 @@ exports.updateReview = factory.updateOne(Models.Review);
 // @access private/user
 exports.deleteReview = factory.deteleOne(Models.Review)
 
-// @desc get all reviews by the productId with the name of the user
-// @route GET /api/v1/Review/:productId
+// @desc get all reviews by the productId with the name of the user 
+// @route GET /api/v1/Review/:productId (it accepts pagination query ?page)
 // @access public
 exports.getReviewsByProductId = asyncHandler(async (req, res, next) => {
     const page = req.query.page || 1;

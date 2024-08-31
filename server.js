@@ -6,8 +6,10 @@ const ProductRoute = require("./routes/product.route");
 const UserRoute = require("./routes/user.route");
 const AuthRoute = require("./routes/auth.route");
 const ReviewRoute = require("./routes/review.route");
+const WishlistRoute = require("./routes/wishlist.route");
 const ApiError = require("./utils/ApiError");
-const {globalErrorHandler} = require("./middlewares/error.middleware")
+const {globalErrorHandler} = require("./middlewares/error.middleware");
+const { cp } = require("fs");
 // create app form express
 const app = express();
 
@@ -23,6 +25,7 @@ app.use("/api/v1/products", ProductRoute);
 app.use("/api/v1/users", UserRoute);
 app.use("/api/v1/auth", AuthRoute);
 app.use("/api/v1/reviews", ReviewRoute);
+app.use("/api/v1/wishlist", WishlistRoute);
 
 app.all('*',(req,res,next)=>{
   next(new ApiError(`Can't find this route: ${req.originalUrl}`, 400));

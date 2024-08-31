@@ -78,16 +78,3 @@ exports.deteleOne = (model) =>
       .json(new ApiSuccess("success", "Object deleted with success"));
   });
 
-// @ find by primary key
-
-exports.findByPrimaryKey = (model) =>
-  asyncHandler(async (req, res, next) => {
-    const id = req.params.id;
-    const object = await model.findByPk({ where: { id } });
-    if (!object) {
-      return next(new ApiError("Object Not Found", 400));
-    }
-    res
-      .status(200)
-      .json(new ApiSuccess("success", "Object finded with success", object));
-  });

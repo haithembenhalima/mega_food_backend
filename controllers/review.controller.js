@@ -1,11 +1,9 @@
 const Models = require("../models/index.model");
 const factory = require("./factoryHandler/FactoryMethods")
- 
+const asyncHandler = require("express-async-handler");
+const ApiError = require("../utils/ApiError");
+const ApiSuccess = require("../utils/ApiSuccess");
 
-// @desc Get One Review by ID
-// @route GET /api/v1/Reviews/:id
-// @access public
-exports.getReviewById = factory.ReadOne(Models.Review)
 
 // @desc Create a new Review
 // @route POST /api/v1/Review
@@ -21,3 +19,21 @@ exports.updateReview = factory.updateOne(Models.Review);
 // @route DELETE /api/v1/Review/:id
 // @access private/user
 exports.deleteReview = factory.deteleOne(Models.Review)
+
+// @desc get all reviews by the productId with the name of the user
+// @route GET /api/v1/Review/:productId
+// @access public
+exports.getReviewsByProductId = asyncHandler(async (req, res, next) => {
+    const ProductId = req.params.productId;
+    const reviews = await Models.Review.findAll({
+        where: { ProductId },
+        include: {
+          model: Models.User,
+          attributes: ['name']  
+        }
+    });
+
+    if(reviews){
+        res.status(200).json(new ApiSuccess("Success", "Reviews fetched successfully", reviews));
+    }
+});

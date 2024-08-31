@@ -24,13 +24,19 @@ exports.deleteReview = factory.deteleOne(Models.Review)
 // @route GET /api/v1/Review/:productId
 // @access public
 exports.getReviewsByProductId = asyncHandler(async (req, res, next) => {
+    const page = req.query.page || 1;
+    const limit = 15;
+    const offset = limit * (page - 1);
+
     const ProductId = req.params.productId;
     const reviews = await Models.Review.findAll({
         where: { ProductId },
         include: {
           model: Models.User,
           attributes: ['name']  
-        }
+        },
+        limit: limit,
+        offset: offset
     });
 
     if(!reviews){

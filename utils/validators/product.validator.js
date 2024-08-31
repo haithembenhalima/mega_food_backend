@@ -1,5 +1,6 @@
 const { check, query} = require("express-validator");
 const {validatorMiddleware} = require("../../middlewares/validator.middleware");
+const Models = require('../../models/index.model');
 
 exports.getProductValidator = [
     query("page").notEmpty().isNumeric().withMessage("pagination value must be a number"),
@@ -11,12 +12,12 @@ exports.getProductValidator = [
 
 exports.createProductValidator = [
     check('name')
-    .notEmpty().withMessage('Category name is empty')
+    .optional()
     .custom(async (name) => {
       // Check if the name already exists in the database
-      const categoryExists = await Models.Categories.findOne({ where: { name } });
-      if (categoryExists) {
-        throw new Error('Category name already exists');
+      const productExists = await Models.Product.findOne({ where: { name } });
+      if (productExists) {
+        throw new Error('Product name already exists');
       }
       return true; // Proceed if no errors
     }),
@@ -34,13 +35,15 @@ exports.createProductValidator = [
 
 exports.updateProductValidator = [
     check('name')
-    .notEmpty().withMessage('Category name is empty')
     .custom(async (name) => {
+      if(name){
       // Check if the name already exists in the database
-      const categoryExists = await Models.Categories.findOne({ where: { name } });
-      if (categoryExists) {
-        throw new Error('Category name already exists');
+      const productExists = await Models.Product.findOne({ where: { name } });
+      if (productExists) {
+        throw new Error('Product name already exists');
       }
+      }
+
       return true; // Proceed if no errors
     }),
     check("price").optional().notEmpty().isNumeric().withMessage("Product price must be a number and not empty"),

@@ -1,5 +1,6 @@
 const { check, query} = require("express-validator");
 const {validatorMiddleware} = require("../../middlewares/validator.middleware");
+const Models = require('../../models/index.model');
 
 exports.getUserValidator = [
     query("page").notEmpty().isNumeric().withMessage("pagination value must be a number"),
@@ -11,15 +12,7 @@ exports.getUserValidator = [
 
 exports.createUserValidator = [
     check('name')
-    .notEmpty().withMessage('Category name is empty')
-    .custom(async (name) => {
-      // Check if the name already exists in the database
-      const categoryExists = await Models.Categories.findOne({ where: { name } });
-      if (categoryExists) {
-        throw new Error('Category name already exists');
-      }
-      return true; // Proceed if no errors
-    }),
+    .notEmpty().withMessage('User name is empty'),
     check("email").notEmpty().isEmail().withMessage("email must be not empty and valid "),
     check("phone").notEmpty().isMobilePhone(["ar-DZ"]).withMessage("Enter correct phone number"),
     check("password").notEmpty().isString().isLength({ min: 8 }).withMessage("Password must be at least 8 characters long"),
@@ -29,16 +22,7 @@ exports.createUserValidator = [
 ];
 
 exports.updateUserValidator = [
-    check('name')
-    .notEmpty().withMessage('Category name is empty')
-    .custom(async (name) => {
-      // Check if the name already exists in the database
-      const categoryExists = await Models.Categories.findOne({ where: { name } });
-      if (categoryExists) {
-        throw new Error('Category name already exists');
-      }
-      return true; // Proceed if no errors
-    }),
+    check('name').optional().notEmpty().withMessage("Name empty"),
     check("email").optional().notEmpty().isEmail().withMessage("email must be not empty and valid "),
     check("phone").optional().notEmpty().isMobilePhone(["ar-DZ"]).withMessage("Enter correct phone number"),
     check("password").optional().notEmpty().isLength({ min: 8 }).withMessage("Password must be at least 8 characters long"),

@@ -6,22 +6,22 @@ const ApiSuccess = require("../utils/ApiSuccess");
 
 
 // @desc Create a new Review
-// @route POST /api/v1/Review
+// @route POST /api/v1/review
 // @access private/user
 exports.createReview = factory.createOne(Models.Review)
 
 // @desc Update a Review
-// @route PUT /api/v1/Review/:id
+// @route PUT /api/v1/review/:id
 // @access private/user
 exports.updateReview = factory.updateOne(Models.Review);
 
 // @desc Delete a Review
-// @route DELETE /api/v1/Review/:id
+// @route DELETE /api/v1/review/:id
 // @access private/user
 exports.deleteReview = factory.deteleOne(Models.Review)
 
 // @desc get all reviews by the productId with the name of the user 
-// @route GET /api/v1/Review/:productId (it accepts pagination query ?page)
+// @route GET /api/v1/review/:productId (it accepts pagination query ?page)
 // @access public
 exports.getReviewsByProductId = asyncHandler(async (req, res, next) => {
     const page = req.query.page || 1;

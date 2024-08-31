@@ -54,6 +54,7 @@ const Product = sequelize.define(
     },
   },
   {
+    // calculate the average rating for each produc using the total command number before saving
     hooks: {
       beforeSave: async (product, options) => {
         // Check if password is provided and has changed

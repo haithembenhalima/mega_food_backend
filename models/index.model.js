@@ -3,7 +3,7 @@ const Product = require('./product.model')
 const User = require('./user.model')
 const Review = require('./review.model')
 const Wishlist = require('./wishlist.model')
-
+const Coupon = require('./coupon.model')
 
 // relashion between tables
 
@@ -27,6 +27,7 @@ Product.sync({alter: true});
 User.sync({alter: true});
 Review.sync({alter: true});
 Wishlist.sync({alter: true});
+Coupon.sync({alter: true});
 
 // export modules
 module.exports = {
@@ -34,5 +35,6 @@ module.exports = {
     Product,
     User,
     Review,
-    Wishlist
+    Wishlist,
+    Coupon
 }

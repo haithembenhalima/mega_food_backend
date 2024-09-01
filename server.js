@@ -8,6 +8,7 @@ const AuthRoute = require("./routes/auth.route");
 const ReviewRoute = require("./routes/review.route");
 const WishlistRoute = require("./routes/wishlist.route");
 const CouponsRoute = require("./routes/coupon.route");
+const CartRoute = require("./routes/cart.route");
 const ApiError = require("./utils/ApiError");
 const {globalErrorHandler} = require("./middlewares/error.middleware");
 const { cp } = require("fs");
@@ -28,7 +29,7 @@ app.use("/api/v1/auth", AuthRoute);
 app.use("/api/v1/reviews", ReviewRoute);
 app.use("/api/v1/wishlist", WishlistRoute);
 app.use("/api/v1/coupons", CouponsRoute);
-
+app.use("/api/v1/cart", CartRoute);
 
 app.all('*',(req,res,next)=>{
   next(new ApiError(`Can't find this route: ${req.originalUrl}`, 400));

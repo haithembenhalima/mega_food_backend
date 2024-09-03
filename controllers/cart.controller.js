@@ -127,14 +127,14 @@ exports.applyCoupon = asyncHandler(async (req, res, next) => {
 });
 
 // @desc Updaring the quantity of the product in the cart
-// @route POST /api/v1/cart/update/:ProductId
+// @route PUT /api/v1/cart/update/:ProductId
 // @access private/user
 exports.udpateInCart = asyncHandler(async (req, res, next) => {
   const ItemId = req.params.id;
   const { UserId, quantity } = req.body;
   console.log("item id: ", ItemId, " quantity: ", quantity);
 
-  // 1) - Update the quantity in the cart item 
+  // 1) - Update the quantity in the cart item
   const updateProductIntoCartItem = await Models.CartItem.update(
     { quantity },
     { where: { id: ItemId } }
@@ -144,5 +144,50 @@ exports.udpateInCart = asyncHandler(async (req, res, next) => {
     return next(new ApiError("Item not found in cart items", 404));
   }
 
-  res.status(200).json(new ApiSuccess(200, "Product quantity updated successfully"))
+  res
+    .status(200)
+    .json(new ApiSuccess(200, "Product quantity updated successfully"));
+});
+
+// @desc deleting a product from the cart
+// @route DELETE /api/v1/cart/update/:ProductId
+// @access private/user
+exports.deleteProductFromCart = asyncHandler(async (req, res, next) => {
+  const ItemId = req.params.id;
+
+  // 1) - remove the item price from the total price of the user cart
+  // get the specific item from the cart item
+  const CartItem = await Models.CartItem.findOne({
+    where: { id: ItemId },
+  });
+
+  // get the Cart of the user that contains all the cart Items
+  const CartIdForUser = CartItem.CartId;
+  const userCart = await Models.Cart.findOne({ where: { id: CartIdForUser } });
+
+  // get the item details using the join with the product model
+  const ItemDetails = await Models.CartItem.findAll({
+    where: { ProductId: CartItem.ProductId },
+    include: { model: Models.Product },
+  });
+
+  // calculate the price removed from the cart when the item is removed
+  userCart.totalCartPrice -=
+    (ItemDetails[0].Product.price - ItemDetails[0].Product.solde) *
+    CartItem.quantity;
+
+  // save it
+  await userCart.save();
+
+  // 2) - delete the item form the cart items
+  const deleteProductFromCartItem = await Models.CartItem.destroy({
+    where: { id: ItemId },
+  });
+  if (deleteProductFromCartItem == 0) {
+    return next(new ApiError("Item not found in cart items", 404));
+  }
+
+  res
+    .status(200)
+    .json(new ApiSuccess(200, "Product deleted from the cart successfully"));
 });

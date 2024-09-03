@@ -4,8 +4,8 @@ const ApiError = require("./ApiError");
 // The all API features using in the system
 exports.ApiFeatures = (query, limit, next) => {
   // Extract the query parameters coming
+  const page = query.page || 1;
   const {
-    page,
     sort,
     order = "ASC",
     filter,

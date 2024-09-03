@@ -6,7 +6,7 @@ const Wishlist = require('./wishlist.model')
 const Coupon = require('./coupon.model')
 const Cart = require('./cart.model')
 const CartItem = require('./cartItem.model')
-
+const Order = require('./order.model')
 // relashion between tables
 
 Categories.hasMany(Product);
@@ -26,6 +26,12 @@ Cart.belongsTo(User);
 CartItem.belongsTo(Cart, {onDelete: "CASCADE"});
 CartItem.belongsTo(Product);
 
+Order.belongsTo(User);
+Order.belongsTo(Cart);
+User.hasMany(Order);
+Cart.hasMany(Order);
+
+
 
 // syncing tables
 Categories.sync({alter: true})
@@ -36,6 +42,7 @@ Wishlist.sync({alter: true});
 Coupon.sync({alter: true});
 Cart.sync({alter: true});
 CartItem.sync({alter: true});
+Order.sync({alter: true});
 
 // export modules
 module.exports = {
@@ -46,5 +53,7 @@ module.exports = {
     Wishlist,
     Coupon,
     Cart,
-    CartItem
+    CartItem,
+    Order
+    
 }

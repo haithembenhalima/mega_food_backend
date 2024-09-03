@@ -4,7 +4,6 @@ const ApiError = require("../utils/ApiError");
 const ApiSuccess = require("../utils/ApiSuccess");
 const { where } = require("sequelize");
 
-
 // @desc Get User Cart
 // @route GET /api/v1/cart/:UserId
 // @access private/user
@@ -21,18 +20,15 @@ exports.getCartItems = asyncHandler(async (req, res, next) => {
     });
 
     if (CartItem) {
-      res
-        .status(200)
-        .json(
-          new ApiSuccess(
-            "success",
-            "Cart items retrieved successfully",
-            {Cart, CartItem}
-          )
-        );
+      res.status(200).json(
+        new ApiSuccess("success", "Cart items retrieved successfully", {
+          Cart,
+          CartItem,
+        })
+      );
     }
-  }else{
-    return next(new ApiError("User id not found", 404))
+  } else {
+    return next(new ApiError("User id not found", 404));
   }
 });
 
@@ -82,22 +78,20 @@ exports.addToCart = asyncHandler(async (req, res, next) => {
   // 5) - save it in user cart
   await userCart.save();
 
-  return res
-    .status(200)
-    .json(
-      new ApiSuccess("Product added to the cart", {
-        name: CartItem[0].Product.name,
-        price: CartItem[0].Product.price,
-        quantity,
-      })
-    );
+  return res.status(200).json(
+    new ApiSuccess("Product added to the cart", {
+      name: CartItem[0].Product.name,
+      price: CartItem[0].Product.price,
+      quantity,
+    })
+  );
 });
 
 // @desc apply coupon to User Cart
 // @route POST /api/v1/cart/applyCoupon
 // @access private/user
 exports.applyCoupon = asyncHandler(async (req, res, next) => {
-  const UserId = req.body.UserId;  
+  const UserId = req.body.UserId;
   // check if user has a coupon
   if (req.body.coupon) {
     const coupon = await Models.Coupon.findOne({
@@ -111,17 +105,44 @@ exports.applyCoupon = asyncHandler(async (req, res, next) => {
       }
       // check if the coupon not used by the user before
       const Cart = await Models.Cart.findOne({ where: { UserId } });
-      if(Cart.isUsedCoupon === true){
+      if (Cart.isUsedCoupon === true) {
         return next(new ApiError("The User is used this coupon", 400));
       }
       Cart.totalCartPrice -= coupon.discount;
       Cart.isUsedCoupon = true;
       await Cart.save();
-      res.status(200).json(new ApiSuccess(200, "Coupon applied successfully", Cart.totalCartPrice)) 
-      
-    }else{
-        return next(new ApiError("Coupon not found", 400));
-  
+      res
+        .status(200)
+        .json(
+          new ApiSuccess(
+            200,
+            "Coupon applied successfully",
+            Cart.totalCartPrice
+          )
+        );
+    } else {
+      return next(new ApiError("Coupon not found", 400));
     }
   }
+});
+
+// @desc Updaring the quantity of the product in the cart
+// @route POST /api/v1/cart/update/:ProductId
+// @access private/user
+exports.udpateInCart = asyncHandler(async (req, res, next) => {
+  const ItemId = req.params.id;
+  const { UserId, quantity } = req.body;
+  console.log("item id: ", ItemId, " quantity: ", quantity);
+
+  // 1) - Update the quantity in the cart item 
+  const updateProductIntoCartItem = await Models.CartItem.update(
+    { quantity },
+    { where: { id: ItemId } }
+  );
+
+  if (updateProductIntoCartItem == 0) {
+    return next(new ApiError("Item not found in cart items", 404));
+  }
+
+  res.status(200).json(new ApiSuccess(200, "Product quantity updated successfully"))
 });

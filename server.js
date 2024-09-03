@@ -1,16 +1,8 @@
 const express = require("express");
 const path = require("path");
 require('dotenv').config();
-const CategoriesRoute = require("./routes/categories.route");
-const ProductRoute = require("./routes/product.route");
-const UserRoute = require("./routes/user.route");
-const AuthRoute = require("./routes/auth.route");
-const ReviewRoute = require("./routes/review.route");
-const WishlistRoute = require("./routes/wishlist.route");
-const CouponsRoute = require("./routes/coupon.route");
-const CartRoute = require("./routes/cart.route");
-const OrderRoute = require("./routes/order.route");
 const ApiError = require("./utils/ApiError");
+const mountRoutes = require("./routes/index.route");
 const {globalErrorHandler} = require("./middlewares/error.middleware");
 const { cp } = require("fs");
 // create app form express
@@ -22,16 +14,8 @@ app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
 app.use(express.json());
 
 
-// API Routes
-app.use("/api/v1/categories", CategoriesRoute);
-app.use("/api/v1/products", ProductRoute);
-app.use("/api/v1/users", UserRoute);
-app.use("/api/v1/auth", AuthRoute);
-app.use("/api/v1/reviews", ReviewRoute);
-app.use("/api/v1/wishlist", WishlistRoute);
-app.use("/api/v1/coupons", CouponsRoute);
-app.use("/api/v1/cart", CartRoute);
-app.use("/api/v1/orders", OrderRoute);
+// all the routes mounted here
+mountRoutes(app);
 
 
 app.all('*',(req,res,next)=>{

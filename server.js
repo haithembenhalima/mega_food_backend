@@ -2,6 +2,7 @@ const express = require("express");
 const cors = require("cors");
 const path = require("path");
 const morgan = require("morgan");
+const bodyParser = require("body-parser"); 
 require('dotenv').config();
 const ApiError = require("./utils/ApiError");
 const mountRoutes = require("./routes/index.route");
@@ -13,10 +14,10 @@ const { cp } = require("fs");
 // create app form express
 const app = express();
 
-// express middlewares
-const bodyParser = require("body-parser"); 
+// Global express middlewares
 app.use(
   bodyParser.json({
+    // handling the request body of chargily
     verify: (req, res, buf) => {
       req.rawBody = buf;
     },

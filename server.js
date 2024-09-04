@@ -5,7 +5,10 @@ require('dotenv').config();
 const ApiError = require("./utils/ApiError");
 const mountRoutes = require("./routes/index.route");
 const {globalErrorHandler} = require("./middlewares/error.middleware");
+const limiter = require("./config/rateLimiter.config")
 const { cp } = require("fs");
+
+
 // create app form express
 const app = express();
 
@@ -22,6 +25,7 @@ app.use(express.urlencoded({extended:true}));
 app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
 app.use(express.json());
 app.use(cors());
+app.use(limiter);
 
 // all the routes mounted here
 mountRoutes(app);

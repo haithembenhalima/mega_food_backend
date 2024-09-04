@@ -1,4 +1,5 @@
 require('dotenv').config();
+const logger = require("../config/logger.config");
 
 // @desc Object format for the errors in development mode
 const ErrorForDevelopment = (err, res) =>{
@@ -25,5 +26,8 @@ exports.globalErrorHandler = (err, req, res, next)=>{
         ErrorForDevelopment(err, res);
     }else if(process.env.NODE_ENV === 'production'){
         ErrorForProduction(err, res);
+        
+        // log the error in production mode
+        logger.error(err.message)
     }
 }

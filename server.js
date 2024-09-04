@@ -9,6 +9,14 @@ const { cp } = require("fs");
 const app = express();
 
 // express middlewares
+const bodyParser = require("body-parser"); 
+app.use(
+  bodyParser.json({
+    verify: (req, res, buf) => {
+      req.rawBody = buf;
+    },
+  })
+);
 app.use(express.urlencoded({extended:true}));
 app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
 app.use(express.json());

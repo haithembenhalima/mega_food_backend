@@ -1,6 +1,7 @@
 const express = require("express");
 const cors = require("cors");
 const path = require("path");
+const morgan = require("morgan");
 require('dotenv').config();
 const ApiError = require("./utils/ApiError");
 const mountRoutes = require("./routes/index.route");
@@ -26,6 +27,7 @@ app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
 app.use(express.json({limit: '3mb'}));
 app.use(cors());
 app.use(limiter);
+app.use(morgan());
 
 // all the routes mounted here
 mountRoutes(app);

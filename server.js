@@ -1,47 +1,18 @@
-const express = require("express");
-const cors = require("cors");
-const path = require("path");
-const morgan = require("morgan");
-const bodyParser = require("body-parser"); 
-require('dotenv').config();
-const ApiError = require("./utils/ApiError");
-const mountRoutes = require("./routes/index.route");
-const {globalErrorHandler} = require("./middlewares/error.middleware");
-const limiter = require("./config/rateLimiter.config")
-const { cp } = require("fs");
+const http = require('http');
+const {app} = require('./app');
+const logger = require("./config/logger.config");
 
 
-// create app form express
-const app = express();
+const port = process.env.SERVER_PORT
+const server = http.createServer(app);
+server.keepAliveTimeout = 60000;
+server.timeout = 7000;
+server.maxHeadersCount = 30;
 
-// Global express middlewares
-app.use(
-  bodyParser.json({
-    // handling the request body of chargily
-    verify: (req, res, buf) => {
-      req.rawBody = buf;
-    },
-  })
-);
-app.use(express.urlencoded({extended:true}));
-app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
-app.use(express.json({limit: '3mb'}));
-app.use(cors());
-app.use(limiter);
-app.use(morgan());
-
-// all the routes mounted here
-mountRoutes(app);
-
-
-app.all('*',(req,res,next)=>{
-  next(new ApiError(`Can't find this route: ${req.originalUrl}`, 400));
+server.listen(port,()=>{
+  console.log("server is running on port: ", port);
 });
 
-// Global Error handling middleware
-app.use(globalErrorHandler)
-
-// server listening
-app.listen(process.env.SERVER_PORT,()=>{
-  console.log("server is running on port: ", process.env.SERVER_PORT);
-});
+server.on("error",(err) => {
+  logger.error(err)
+})

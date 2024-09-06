@@ -7,7 +7,7 @@ const { ApiFeatures } = require("../../utils/ApiFeatures");
 // @desc Read all data from the tables with the features
 exports.ReadAll = (model) =>
   asyncHandler(async (req, res, next) => {
-    const { page } = req.query;
+    const { page } = req.query || 1;
     const limit = 2;
     const features = ApiFeatures(req.query, limit, next);
     const objects = await model.findAll(features);

@@ -5,15 +5,23 @@ const {
   createUserValidator,
   updateUserValidator,
 } = require("../utils/validators/user.validator");
-const {uploadSingleImage} = require("../middlewares/uploadingImages.middleware");
+const {
+  uploadSingleImage,
+} = require("../middlewares/uploadingImages.middleware");
 const processingImage = require("../middlewares/imageProcessing.middleware");
+const usingRedisCaching = require("../middlewares/cache.middleware");
+const Models = require("../models/index.model");
 
 // create route form express router
 const routes = express.Router();
 
-
 // define routes for Users
-routes.get("/",  getUserValidator, UserController.getUsers);
+routes.get(
+  "/",
+  usingRedisCaching(Models.User),
+  getUserValidator,
+  UserController.getUsers
+);
 routes.get("/:id", UserController.getUserById);
 routes.post(
   "/",

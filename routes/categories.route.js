@@ -8,15 +8,21 @@ const {
   createCategoryValidator,
   updateCategoryValidator,
 } = require("../utils/validators/category.validator");
-const {permessions} = require('../middlewares/permessions.middleware')
+const { permessions } = require("../middlewares/permessions.middleware");
+const Models = require("../models/index.model");
+const usingRedisCaching = require("../middlewares/cache.middleware");
 
 
 
-// create router from express router
+// create router from express routers
 const routes = express.Router();
 
 // define routes for categories
-routes.get("/",/*permessions("user"),*/ CategotiesController.getCategories);
+routes.get(
+  "/",
+  /*permessions("user"),*/ usingRedisCaching(Models.Categories),
+  CategotiesController.getCategories
+);
 routes.get("/:id", CategotiesController.getCategoriesById);
 routes.post(
   "/",

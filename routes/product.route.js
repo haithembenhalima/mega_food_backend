@@ -9,13 +9,20 @@ const {
   uploadMultipleImages,
 } = require("../middlewares/uploadingImages.middleware");
 const processingImage = require("../middlewares/imageProcessing.middleware");
+const usingRedisCaching = require("../middlewares/cache.middleware");
+const Models = require("../models/index.model");
+const { Model } = require("sequelize");
 
 // create route form express router
 const routes = express.Router();
 
-
 // define routes for products
-routes.get("/", getProductValidator, ProductController.getProducts);
+routes.get(
+  "/",
+  usingRedisCaching(Models.Product),
+  getProductValidator,
+  ProductController.getProducts
+);
 routes.get("/:id", ProductController.getProductById);
 routes.post(
   "/",

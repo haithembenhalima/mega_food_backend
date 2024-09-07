@@ -12,20 +12,19 @@ const { permessions } = require("../middlewares/permessions.middleware");
 const Models = require("../models/index.model");
 const usingRedisCaching = require("../middlewares/cache.middleware");
 
-
-
 // create router from express routers
 const routes = express.Router();
 
 // define routes for categories
 routes.get(
   "/",
-  /*permessions("user"),*/ usingRedisCaching(Models.Categories),
+  usingRedisCaching(Models.Categories),
   CategotiesController.getCategories
 );
 routes.get("/:id", CategotiesController.getCategoriesById);
 routes.post(
   "/",
+  permessions("admin"),
   uploadSingleImage("image"),
   processingImage("categories"),
   createCategoryValidator,
@@ -33,10 +32,15 @@ routes.post(
 );
 routes.put(
   "/:id",
+  permessions("admin"),
   updateCategoryValidator,
   CategotiesController.updateCategory
 );
-routes.delete("/:id", CategotiesController.deleteCategory);
+routes.delete(
+  "/:id",
+  permessions("admin"),
+  CategotiesController.deleteCategory
+);
 
 // export the routes
 module.exports = routes;

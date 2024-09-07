@@ -47,5 +47,182 @@ services such as: Ordering synchronization and E-payement solutions in algeria.<
    - **Data Encryption:** Ensure user data and transactions are protected with strong encryption.
    - **Caching:** Using caching system for the best performance
 
+# Getting started
 
+Ensure that you have:
 
+- NodeJS
+- MySQL
+- Redis
+
+Maybe you need to use: (optional)
+
+- Vscode (proposed)
+- Postman (proposed)
+- Docker
+  
+### Installation
+1. Clone the repository:
+
+```
+git clone https://github.com/haithembenhalima/dietary_ia.git
+```
+
+2. Install dependencies:
+
+```
+npm install
+```
+
+3. Set up environment variables, Create a ` .env ` file in the root directory and add the following:
+```
+# server environment
+SERVER_PORT = 5000
+NODE_ENV = "development" # or production
+DB_HOST = "localhost"  # if you working on localhost
+PRODUCTION_URL = "https://restaurant.com" #website url if is deployed
+
+# database environment
+DB_USER = "root"
+DB_PASSWORD = ""
+DB_NAME= "restaurant_db"
+DB_DIALECT = "mysql"
+
+# JWT environment
+JWT_SECRET_KEY = your JWT Token
+JWT_EXPIRATION_TIME = "7d"
+
+# nodemailer environment
+EMAIL_USER = example@gmail.com
+EMAIL_PASSWORD = password
+EMAIL_HOST = "smtp.gmail.com" # if using gmail
+EMAIL_PORT = "465" # if using gmail
+
+# chargily pay
+CHARGILY_SECRET_KEY = your chargily secret key
+
+# Redis env
+REDIS_PORT = 6379
+REDIS_HOST = "localhost" # if you working on localhost
+```
+### Usage
+
+1. Start the server
+
+```
+
+# Development mode
+npm run start:dev
+
+# Production mode
+npm run start:production
+
+# Test mode
+npm run start:test
+
+```
+
+2. If you need to run the application using Docker apply the following steps:
+   - Build the Docker image:
+     ```
+     docker build -t mega-food .
+     ```
+   - Run Docker container:
+     ```
+     docker-compose up
+     ```
+   - Access to application:
+     ```
+       http://localhost:${PORT}
+     ```
+
+# Project Structure
+
+```
+
+   ├─ .dockerignore
+   ├─ .env
+   ├─ app.js
+   ├─ config
+   │  ├─ database.config.js
+   │  ├─ logger.config.js
+   │  ├─ rateLimiter.config.js
+   │  └─ redis.config.js
+   ├─ controllers
+   │  ├─ auth.controller.js
+   │  ├─ cart.controller.js
+   │  ├─ categories.controller.js
+   │  ├─ coupon.controller.js
+   │  ├─ factoryHandler
+   │  │  └─ FactoryMethods.js
+   │  ├─ order.controller.js
+   │  ├─ payment.controller.js
+   │  ├─ product.controller.js
+   │  ├─ review.controller.js
+   │  ├─ user.controller.js
+   │  └─ wishlist.controller.js
+   ├─ database
+   │  └─ connect.database.js
+   ├─ docker-compose.yml
+   ├─ Dockerfile
+   ├─ errors.log
+   ├─ middlewares
+   │  ├─ cache.middleware.js
+   │  ├─ error.middleware.js
+   │  ├─ imageProcessing.middleware.js
+   │  ├─ permessions.middleware.js
+   │  ├─ uploadingImages.middleware.js
+   │  └─ validator.middleware.js
+   ├─ models
+   │  ├─ cart.model.js
+   │  ├─ cartItem.model.js
+   │  ├─ category.model.js
+   │  ├─ coupon.model.js
+   │  ├─ index.model.js
+   │  ├─ order.model.js
+   │  ├─ product.model.js
+   │  ├─ review.model.js
+   │  ├─ user.model.js
+   │  └─ wishlist.model.js
+   ├─ package-lock.json
+   ├─ package.json
+   ├─ routes
+   │  ├─ auth.route.js
+   │  ├─ cart.route.js
+   │  ├─ categories.route.js
+   │  ├─ coupon.route.js
+   │  ├─ index.route.js
+   │  ├─ order.route.js
+   │  ├─ payment.route.js
+   │  ├─ product.route.js
+   │  ├─ review.route.js
+   │  ├─ user.route.js
+   │  └─ wishlist.route.js
+   ├─ server.js
+   ├─ uploads
+   ├─ utils
+   │  ├─ ApiError.js
+   │  ├─ ApiFeatures.js
+   │  ├─ ApiSuccess.js
+   │  ├─ emailMessages.js
+   │  ├─ generateToken.js
+   │  ├─ sendEmail.js
+   │  └─ validators
+   │     ├─ auth.validator.js
+   │     ├─ category.validator.js
+   │     ├─ coupon.validator.js
+   │     ├─ product.validator.js
+   │     ├─ review.validator.js
+   │     └─ user.validator.js
+   └─ __tests__
+      ├─ auth.spec.js
+      ├─ category.spec.js
+      ├─ coupon.spec.js
+      ├─ order.spec.js
+      ├─ product.spec.js
+      ├─ review.spec.js
+      └─ user.spec.js
+
+```
+
+# Endpoints

@@ -226,3 +226,70 @@ npm run start:test
 ```
 
 # Endpoints
+1. ***Categories***
+   - ` GET /api/v1/categories  ` Get all categories <br>
+    Accept queries EX: <br>
+                       [ ?page=1 ] <br>
+                       [?search=burger]
+   - ` GET /api/v1/categories/:id ` Get one Category
+   - ` POST /api/v1/categories ` Create Category
+   - ` PUT /api/v1/categories/:id ` Update Category
+   - ` DELETE /api/v1/categories/:id ` Delete Category
+     
+  2. ***products***
+   - ` GET /api/v1/products  ` Get all products <br>
+    Accept queries EX: <br>
+                       [ ?page=1 ] <br>
+                       [ ?filter=price=500 ] <br>
+                       [ ?filter=CategoryID=chicken;price=100-300 ] <br>
+                       [ ?filter=CategoryID=chicken;price=100- ]
+                       [ ?filter=CategoryID=chicken;price=-100 ]
+                       [?sort=price&order=ASC]
+                       [?search=pizza]
+   - ` GET /api/v1/products/:id ` Get one product
+   - ` POST /api/v1/products ` Create product
+   - ` PUT /api/v1/products/:id ` Update product
+   - ` DELETE /api/v1/products/:id ` Delete product
+     
+  3. ***users***
+   - ` GET /api/v1/users  ` Get all users <br>
+    Accept queries EX: <br>
+                       [ ?page=1 ] <br>
+                       [?search=mohamed]
+   - ` GET /api/v1/users/:id ` Get one user
+   - ` POST /api/v1/users ` Create user
+   - ` PUT /api/v1/users/:id ` Update user
+   - ` DELETE /api/v1/users/:id ` Delete user
+
+ 4. ***coupons***
+   - ` GET /api/v1/coupons  ` Get all coupons <br>
+    Accept queries EX: <br>
+                       [ ?page=1 ] <br>
+                       [?search=5_JUILLET_2025]
+   - ` GET /api/v1/coupons/:id ` Get one coupon
+   - ` POST /api/v1/coupons ` Create coupon
+   - ` PUT /api/v1/coupons/:id ` Update coupon
+   - ` DELETE /api/v1/coupons/:id ` Delete coupon
+
+ 5. ***orders***
+   - ` GET /api/v1/orders  ` Get all orders <br>
+    Accept queries EX: <br>
+                       [ ?page=1 ] <br>
+                       [?search=12342]
+   - ` GET /api/v1/orders/:id ` Get one order
+   - ` POST /api/v1/orders ` Create order
+   - ` PUT /api/v1/orders/:id ` Update order
+   - ` DELETE /api/v1/orders/:id ` Delete order
+
+  6. ***reviews***
+   - ` GET /api/v1/reviews/:ProductId ` Get one review by product id
+   - ` POST /api/v1/reviews ` Create review
+   - ` PUT /api/v1/reviews/:id ` Update review
+   - ` DELETE /api/v1/reviews/:id ` Delete reviews
+
+   6. ***auth***
+   - ` POST /api/v1/signup ` register
+   - ` POST /api/v1/login ` login
+   - ` POST /api/v1/forgotPassword` forgot passowrd
+   - ` POST /api/v1/verifyResetCode ` verify reset code
+   - - ` POST /api/v1/resetPassword ` reset the new password

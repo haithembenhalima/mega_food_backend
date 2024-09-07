@@ -227,14 +227,14 @@ npm run start:test
 
 # Endpoints
 1. ***Categories***
-   - ` GET /api/v1/categories  ` Get all categories <br>
+  - ` GET /api/v1/categories  ` Get all categories <br>
     Accept queries EX: <br>
                        [ ?page=1 ] <br>
                        [?search=burger]
-   - ` GET /api/v1/categories/:id ` Get one Category
-   - ` POST /api/v1/categories ` Create Category
-   - ` PUT /api/v1/categories/:id ` Update Category
-   - ` DELETE /api/v1/categories/:id ` Delete Category
+  - ` GET /api/v1/categories/:id ` Get one Category
+  - ` POST /api/v1/categories ` Create Category
+  - ` PUT /api/v1/categories/:id ` Update Category
+  - ` DELETE /api/v1/categories/:id ` Delete Category
      
   2. ***products***
    - ` GET /api/v1/products  ` Get all products <br>

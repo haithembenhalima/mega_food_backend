@@ -292,7 +292,7 @@ npm run start:test
    - ` POST /api/v1/auth/login ` login
    - ` POST /api/v1/auth/forgotPassword` forgot passowrd
    - ` POST /api/v1/auth/verifyResetCode ` verify reset code
-   - - ` POST /api/v1/auth/resetPassword ` reset the new password
+   - ` POST /api/v1/auth/resetPassword ` reset the new password
        
   7. ***wishlits***
    - ` GET /api/v1/wishlist/:UserId ` Get wishlist of the user

@@ -3,15 +3,16 @@ const cors = require("cors");
 const path = require("path");
 const morgan = require("morgan");
 const bodyParser = require("body-parser"); 
-require('dotenv').config();
 const ApiError = require("./utils/ApiError");
 const mountRoutes = require("./routes/index.route");
-const {globalErrorHandler} = require("./middlewares/error.middleware");
 const limiter = require("./config/rateLimiter.config")
+const {globalErrorHandler} = require("./middlewares/error.middleware");
+require('dotenv').config();
 
 
 // create app form express
 const app = express();
+
 
 // Global express middlewares
 app.use(
@@ -32,7 +33,7 @@ app.use(morgan());
 // all the routes mounted here
 mountRoutes(app);
 
-
+// 404 routing error handlers
 app.all('*',(req,res,next)=>{
   next(new ApiError(`Can't find this route: ${req.originalUrl}`, 400));
 });

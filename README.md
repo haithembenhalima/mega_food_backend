@@ -288,8 +288,21 @@ npm run start:test
    - ` DELETE /api/v1/reviews/:id ` Delete reviews
 
    6. ***auth***
-   - ` POST /api/v1/signup ` register
-   - ` POST /api/v1/login ` login
-   - ` POST /api/v1/forgotPassword` forgot passowrd
-   - ` POST /api/v1/verifyResetCode ` verify reset code
-   - - ` POST /api/v1/resetPassword ` reset the new password
+   - ` POST /api/v1/auth/signup ` register
+   - ` POST /api/v1/auth/login ` login
+   - ` POST /api/v1/auth/forgotPassword` forgot passowrd
+   - ` POST /api/v1/auth/verifyResetCode ` verify reset code
+   - - ` POST /api/v1/auth/resetPassword ` reset the new password
+       
+  7. ***wishlits***
+   - ` GET /api/v1/wishlist/:UserId ` Get wishlist of the user
+   - ` POST /api/v1/wishlist ` adding product to user wishlist
+   - ` DELETE /api/v1/wishlist/:id` deleting product from user wishlist
+
+  8. ***Carts***
+   - ` GET /api/v1/Carts/:UserId ` Get cart of the user
+   - ` POST /api/v1/Carts ` adding product to user cart
+   - ` DELETE /api/v1/Carts/:id` deleting product from user cart
+   - ` PUT /api/v1/Carts/:id ` updating product on user cart
+   - ` DELETE /api/v1/Carts/applyCoupon` applying coupon 
+

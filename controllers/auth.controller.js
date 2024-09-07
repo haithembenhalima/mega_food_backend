@@ -81,7 +81,7 @@ exports.forgotPassword = asyncHandler(async (req, res, next) => {
   const message = forgotPasswordMessage(resetCode, user.name);
   console.log(resetCode);
 
-  /* try {
+   try {
     sendEmail({
       email: userData.email,
       subject: "إعادة تعيين كلمة سر جديدة",
@@ -89,7 +89,7 @@ exports.forgotPassword = asyncHandler(async (req, res, next) => {
     });
   } catch (error) {
     return next(new ApiError("Email message sending failed", 400))
-  }  */
+  }  
 
   // 4) - Save the reset code + expiration time in the user's record
   const nowInSeconds = Math.floor(Date.now() / 1000);
@@ -119,7 +119,8 @@ exports.forgotPassword = asyncHandler(async (req, res, next) => {
 exports.verifyResetCode = asyncHandler(async (req, res, next) => {
   // 1) - get the reset code
   const resetCode = req.body.resetCode;
-
+  console.log(resetCode);
+  
   // 2) - check if there is a user with the reset code
 
   const hashedResetCode = crypto

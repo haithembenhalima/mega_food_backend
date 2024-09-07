@@ -1,4 +1,3 @@
-// cacheMiddleware.js
 const redisClient = require("../config/redis.config");
 const ApiSuccess = require("../utils/ApiSuccess");
 const { getAsync, setAsync } = require("../config/redis.config");
@@ -6,19 +5,18 @@ const { getAsync, setAsync } = require("../config/redis.config");
 // Middleware to handle caching using redis
 const cacheMiddleware = (model) => async (req, res, next) => {
   const page = req.query.page ? req.query.page : null;
-  try {
-    // Define a unique cache key based on request parameters or route
-    const cacheKey = `resourceKey:${req.originalUrl}`;
+  const cacheKey = `resourceKey:${req.originalUrl}`;
 
+  try {
     // Get from cache using the cache key
     const cachedData = await getAsync(cacheKey);
     if (cachedData) {
       // If cache exists, return cached data
-      res
-      .status(200)
-      .json(
-        new ApiSuccess("success", "Object getting with success", data, page)
-      );
+      return res
+        .status(200)
+        .json(
+          new ApiSuccess("success", "Object getting with success", JSON.parse(cachedData), page)
+        );
     }
 
     // On cache miss, query the database
@@ -33,7 +31,7 @@ const cacheMiddleware = (model) => async (req, res, next) => {
     );
 
     // Send response with the fetched data
-    res
+    return res
       .status(200)
       .json(
         new ApiSuccess("success", "Object getting with success", data, page)

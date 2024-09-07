@@ -21,7 +21,7 @@ exports.createProductValidator = [
       }
       return true; // Proceed if no errors
     }),
-    check("images").notEmpty().isObject().withMessage("Product images is required"),
+    check("images").notEmpty().withMessage("Product images is required"),
     check("price").notEmpty().isNumeric().withMessage("Product price must be a number and not empty"),
     check("description").notEmpty().withMessage("Product description is empty"),
     check("CategoryId").notEmpty().isNumeric().withMessage("Category ID is empty"),

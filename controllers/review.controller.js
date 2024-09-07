@@ -42,6 +42,6 @@ exports.getReviewsByProductId = asyncHandler(async (req, res, next) => {
     if(!reviews){
         return next(new ApiError("Reviews not found", 404));
     }
-
+    
     res.status(200).json(new ApiSuccess("Success", "Reviews fetched successfully", reviews));
 });

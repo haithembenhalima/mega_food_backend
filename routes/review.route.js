@@ -13,8 +13,6 @@ const routes = express.Router();
 
 routes.get(
   "/:productId",
-  permessions("user"),
-  usingRedisCaching(Models.Review),
   ReviewController.getReviewsByProductId
 );
 routes.post("/", permessions("user"), createReviewValidator, ReviewController.createReview);

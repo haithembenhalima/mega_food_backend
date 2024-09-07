@@ -6,6 +6,6 @@ const { permessions } = require("../middlewares/permessions.middleware");
 const routes = express.Router();
 
 routes.post('/checkout', permessions("user"), PaymentController.checkout);
-routes.post('/webhook', permessions("admin"),  PaymentController.webhook);
+routes.post('/webhook', PaymentController.webhook);
 
 module.exports = routes;

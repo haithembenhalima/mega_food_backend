@@ -56,7 +56,7 @@ exports.login = asyncHandler(async (req, res, next) => {
   // 2) - generate token
   const token = generateToken(userData.email);
   // 3) - send the response
-  const userWithToken = { name: user.name, email: user.email, token: token };
+ const userWithToken = { id: user.id, name: user.name, email: user.email, role: user.role, token: token };
   res
     .status(200)
     .json(new ApiSuccess("success", "Login with success", userWithToken));

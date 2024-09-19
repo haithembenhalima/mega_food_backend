@@ -7,8 +7,8 @@ const routes = express.Router();
 
 routes.post('/signup', signupValidator,  AuthController.signup);
 routes.post('/login', AuthController.login);
-routes.post('/forgotPassword', permessions("user"), AuthController.forgotPassword);
-routes.post('/verifyResetCode', permessions("user"), verifyResetCodeValidator, AuthController.verifyResetCode);
-routes.post('/resetPassword', permessions("user"), AuthController.resetPassword)
+routes.post('/forgotPassword', AuthController.forgotPassword);
+routes.post('/verifyResetCode',  verifyResetCodeValidator, AuthController.verifyResetCode);
+routes.post('/resetPassword', AuthController.resetPassword)
 
 module.exports = routes;

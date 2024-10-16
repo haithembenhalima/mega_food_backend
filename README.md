@@ -306,3 +306,6 @@ npm run start:test
    - ` PUT /api/v1/Carts/:id ` updating product on user cart
    - ` DELETE /api/v1/Carts/applyCoupon` applying coupon 
 
+# Licence
+
+Project Rights Reserved for The `MegaFood Team`

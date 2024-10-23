@@ -65,7 +65,7 @@ Maybe you need to use: (optional)
 1. Clone the repository:
 
 ```
-git clone https://github.com/haithembenhalima/dietary_ia.git
+git clone https://github.com/haithembenhalima/mega_food_backend.git
 ```
 
 2. Install dependencies:
